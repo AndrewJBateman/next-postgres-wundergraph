@@ -1,0 +1,920 @@
+directive @fromClaim(name: Claim) on VARIABLE_DEFINITION
+
+directive @hooksVariable on VARIABLE_DEFINITION
+
+directive @jsonSchema(
+  """
+  The value of both of these keywords MUST be a string.
+  
+  Both of these keywords can be used to decorate a user interface with
+  information about the data produced by this user interface.  A title
+  will preferably be short, whereas a description will provide
+  explanation about the purpose of the instance described by this
+  schema.
+  """
+  title: String
+  """
+  The value of both of these keywords MUST be a string.
+  
+  Both of these keywords can be used to decorate a user interface with
+  information about the data produced by this user interface.  A title
+  will preferably be short, whereas a description will provide
+  explanation about the purpose of the instance described by this
+  schema.
+  """
+  description: String
+  """
+  The value of "multipleOf" MUST be a number, strictly greater than 0.
+  
+  A numeric instance is valid only if division by this keyword's value
+  results in an integer.
+  """
+  multipleOf: Int
+  """
+  The value of "maximum" MUST be a number, representing an inclusive
+  upper limit for a numeric instance.
+  
+  If the instance is a number, then this keyword validates only if the
+  instance is less than or exactly equal to "maximum".
+  """
+  maximum: Int
+  """
+  The value of "exclusiveMaximum" MUST be number, representing an
+  exclusive upper limit for a numeric instance.
+  
+  If the instance is a number, then the instance is valid only if it
+  has a value strictly less than (not equal to) "exclusiveMaximum".
+  """
+  exclusiveMaximum: Int
+  """
+  The value of "minimum" MUST be a number, representing an inclusive
+  lower limit for a numeric instance.
+  
+  If the instance is a number, then this keyword validates only if the
+  instance is greater than or exactly equal to "minimum".
+  """
+  minimum: Int
+  """
+  The value of "exclusiveMinimum" MUST be number, representing an
+  exclusive lower limit for a numeric instance.
+  
+  If the instance is a number, then the instance is valid only if it
+  has a value strictly greater than (not equal to) "exclusiveMinimum".
+  """
+  exclusiveMinimum: Int
+  """
+  The value of this keyword MUST be a non-negative integer.
+  
+  A string instance is valid against this keyword if its length is less
+  than, or equal to, the value of this keyword.
+  
+  The length of a string instance is defined as the number of its
+  characters as defined by RFC 7159 [RFC7159].
+  """
+  maxLength: Int
+  """
+  The value of this keyword MUST be a non-negative integer.
+  
+  A string instance is valid against this keyword if its length is
+  greater than, or equal to, the value of this keyword.
+  
+  The length of a string instance is defined as the number of its
+  characters as defined by RFC 7159 [RFC7159].
+  
+  Omitting this keyword has the same behavior as a value of 0.
+  """
+  minLength: Int
+  """
+  The value of this keyword MUST be a string.  This string SHOULD be a
+  valid regular expression, according to the ECMA 262 regular
+  expression dialect.
+  
+  A string instance is considered valid if the regular expression
+  matches the instance successfully.  Recall: regular expressions are
+  not implicitly anchored.
+  """
+  pattern: String
+  """
+  The value of this keyword MUST be a non-negative integer.
+  
+  An array instance is valid against "maxItems" if its size is less
+  than, or equal to, the value of this keyword.
+  """
+  maxItems: Int
+  """
+  The value of this keyword MUST be a non-negative integer.
+  
+  An array instance is valid against "minItems" if its size is greater
+  than, or equal to, the value of this keyword.
+  
+  Omitting this keyword has the same behavior as a value of 0.
+  """
+  minItems: Int
+  """
+  The value of this keyword MUST be a boolean.
+  
+  If this keyword has boolean value false, the instance validates
+  successfully.  If it has boolean value true, the instance validates
+  successfully if all of its elements are unique.
+  
+  Omitting this keyword has the same behavior as a value of false.
+  """
+  uniqueItems: Boolean
+  commonPattern: COMMON_REGEX_PATTERN
+) on VARIABLE_DEFINITION
+
+directive @rbac(
+  """the user must match all roles"""
+  requireMatchAll: [WG_ROLE]
+  """the user must match at least one of the roles"""
+  requireMatchAny: [WG_ROLE]
+  """the user must not match all of the roles"""
+  denyMatchAll: [WG_ROLE]
+  """the user must not match any of the roles"""
+  denyMatchAny: [WG_ROLE]
+) on QUERY | MUTATION | SUBSCRIPTION
+
+"""
+The directive @injectCurrentDateTime injects a DateTime string of the current date and time into the variable.
+This variable MUST be a string compatible scalar. 
+
+The default format, is: ISO 8601
+If no format is chosen, the default format is used.
+Custom formats are allowed by specifying a format conforming to the Golang specification for specifying a date time format.
+"""
+directive @injectCurrentDateTime(
+  format: WunderGraphDateTimeFormat = ISO8601
+  """customFormat must conform to the Golang specification for specifying a date time format"""
+  customFormat: String
+) on VARIABLE_DEFINITION
+
+"""
+The directive @injectGeneratedUUID injects a generated UUID into the variable.
+This variable MUST be a string.
+At the same time, it removes the variable from the input definition,
+disallowing the user to supply it.
+
+This means, the UUID is 100% generated server-side and can be considered untempered.
+"""
+directive @injectGeneratedUUID on VARIABLE_DEFINITION
+
+"""
+The @internalOperation Directive marks an Operation as internal.
+By doing so, the Operation is no longer accessible from the public API.
+It can only be accessed by internal services, like hooks.
+"""
+directive @internalOperation on QUERY | MUTATION | SUBSCRIPTION
+
+input NestedIntFilter_db {
+  equals: Int
+  in: [Int]
+  notIn: [Int]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter_db
+}
+
+input IntFilter_db {
+  equals: Int
+  in: [Int]
+  notIn: [Int]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter_db
+}
+
+enum QueryMode_db {
+  default
+  insensitive
+}
+
+input NestedStringFilter_db {
+  equals: String
+  in: [String]
+  notIn: [String]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringFilter_db
+}
+
+input StringFilter_db {
+  equals: String
+  in: [String]
+  notIn: [String]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode_db
+  not: NestedStringFilter_db
+}
+
+input NestedDateTimeFilter_db {
+  equals: DateTime_db
+  in: [DateTime_db]
+  notIn: [DateTime_db]
+  lt: DateTime_db
+  lte: DateTime_db
+  gt: DateTime_db
+  gte: DateTime_db
+  not: NestedDateTimeFilter_db
+}
+
+input DateTimeFilter_db {
+  equals: DateTime_db
+  in: [DateTime_db]
+  notIn: [DateTime_db]
+  lt: DateTime_db
+  lte: DateTime_db
+  gt: DateTime_db
+  gte: DateTime_db
+  not: NestedDateTimeFilter_db
+}
+
+input MessagesListRelationFilter_db {
+  every: messagesWhereInput_db
+  some: messagesWhereInput_db
+  none: messagesWhereInput_db
+}
+
+input usersWhereInput_db {
+  AND: usersWhereInput_db
+  OR: [usersWhereInput_db]
+  NOT: usersWhereInput_db
+  id: IntFilter_db
+  email: StringFilter_db
+  name: StringFilter_db
+  updatedat: DateTimeFilter_db
+  lastlogin: DateTimeFilter_db
+  messages: MessagesListRelationFilter_db
+}
+
+input UsersRelationFilter_db {
+  is: usersWhereInput_db
+  isNot: usersWhereInput_db
+}
+
+input messagesWhereInput_db {
+  AND: messagesWhereInput_db
+  OR: [messagesWhereInput_db]
+  NOT: messagesWhereInput_db
+  id: IntFilter_db
+  user_id: IntFilter_db
+  message: StringFilter_db
+  users: UsersRelationFilter_db
+}
+
+enum SortOrder_db {
+  asc
+  desc
+}
+
+input messagesOrderByRelationAggregateInput_db {
+  _count: SortOrder_db
+}
+
+input usersOrderByWithRelationInput_db {
+  id: SortOrder_db
+  email: SortOrder_db
+  name: SortOrder_db
+  updatedat: SortOrder_db
+  lastlogin: SortOrder_db
+  messages: messagesOrderByRelationAggregateInput_db
+}
+
+input messagesOrderByWithRelationInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+  message: SortOrder_db
+  users: usersOrderByWithRelationInput_db
+}
+
+input messagesWhereUniqueInput_db {
+  id: Int
+}
+
+enum MessagesScalarFieldEnum_db {
+  id
+  user_id
+  message
+}
+
+type UsersCountOutputType_db {
+  messages: Int!
+}
+
+type users_db {
+  id: Int!
+  email: String!
+  name: String!
+  updatedat: DateTime_db!
+  lastlogin: DateTime_db!
+  messages(where: messagesWhereInput_db, orderBy: [messagesOrderByWithRelationInput_db], cursor: messagesWhereUniqueInput_db, take: Int, skip: Int, distinct: [MessagesScalarFieldEnum_db]): [messages_db]
+  _count: UsersCountOutputType_db
+}
+
+type messages_db {
+  id: Int!
+  user_id: Int!
+  message: String!
+  users: users_db!
+}
+
+type MessagesCountAggregateOutputType_db {
+  id: Int!
+  user_id: Int!
+  message: Int!
+  _all: Int!
+}
+
+type MessagesAvgAggregateOutputType_db {
+  id: Float
+  user_id: Float
+}
+
+type MessagesSumAggregateOutputType_db {
+  id: Int
+  user_id: Int
+}
+
+type MessagesMinAggregateOutputType_db {
+  id: Int
+  user_id: Int
+  message: String
+}
+
+type MessagesMaxAggregateOutputType_db {
+  id: Int
+  user_id: Int
+  message: String
+}
+
+type AggregateMessages_db {
+  _count: MessagesCountAggregateOutputType_db
+  _avg: MessagesAvgAggregateOutputType_db
+  _sum: MessagesSumAggregateOutputType_db
+  _min: MessagesMinAggregateOutputType_db
+  _max: MessagesMaxAggregateOutputType_db
+}
+
+input messagesCountOrderByAggregateInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+  message: SortOrder_db
+}
+
+input messagesAvgOrderByAggregateInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+}
+
+input messagesMaxOrderByAggregateInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+  message: SortOrder_db
+}
+
+input messagesMinOrderByAggregateInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+  message: SortOrder_db
+}
+
+input messagesSumOrderByAggregateInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+}
+
+input messagesOrderByWithAggregationInput_db {
+  id: SortOrder_db
+  user_id: SortOrder_db
+  message: SortOrder_db
+  _count: messagesCountOrderByAggregateInput_db
+  _avg: messagesAvgOrderByAggregateInput_db
+  _max: messagesMaxOrderByAggregateInput_db
+  _min: messagesMinOrderByAggregateInput_db
+  _sum: messagesSumOrderByAggregateInput_db
+}
+
+input NestedFloatFilter_db {
+  equals: Float
+  in: [Float]
+  notIn: [Float]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter_db
+}
+
+input NestedIntWithAggregatesFilter_db {
+  equals: Int
+  in: [Int]
+  notIn: [Int]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _avg: NestedFloatFilter_db
+  _sum: NestedIntFilter_db
+  _min: NestedIntFilter_db
+  _max: NestedIntFilter_db
+}
+
+input IntWithAggregatesFilter_db {
+  equals: Int
+  in: [Int]
+  notIn: [Int]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _avg: NestedFloatFilter_db
+  _sum: NestedIntFilter_db
+  _min: NestedIntFilter_db
+  _max: NestedIntFilter_db
+}
+
+input NestedStringWithAggregatesFilter_db {
+  equals: String
+  in: [String]
+  notIn: [String]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _min: NestedStringFilter_db
+  _max: NestedStringFilter_db
+}
+
+input StringWithAggregatesFilter_db {
+  equals: String
+  in: [String]
+  notIn: [String]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode_db
+  not: NestedStringWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _min: NestedStringFilter_db
+  _max: NestedStringFilter_db
+}
+
+input messagesScalarWhereWithAggregatesInput_db {
+  AND: messagesScalarWhereWithAggregatesInput_db
+  OR: [messagesScalarWhereWithAggregatesInput_db]
+  NOT: messagesScalarWhereWithAggregatesInput_db
+  id: IntWithAggregatesFilter_db
+  user_id: IntWithAggregatesFilter_db
+  message: StringWithAggregatesFilter_db
+}
+
+type MessagesGroupByOutputType_db {
+  id: Int!
+  user_id: Int!
+  message: String!
+  _count: MessagesCountAggregateOutputType_db
+  _avg: MessagesAvgAggregateOutputType_db
+  _sum: MessagesSumAggregateOutputType_db
+  _min: MessagesMinAggregateOutputType_db
+  _max: MessagesMaxAggregateOutputType_db
+}
+
+input usersWhereUniqueInput_db {
+  id: Int
+  email: String
+}
+
+enum UsersScalarFieldEnum_db {
+  id
+  email
+  name
+  updatedat
+  lastlogin
+}
+
+type UsersCountAggregateOutputType_db {
+  id: Int!
+  email: Int!
+  name: Int!
+  updatedat: Int!
+  lastlogin: Int!
+  _all: Int!
+}
+
+type UsersAvgAggregateOutputType_db {
+  id: Float
+}
+
+type UsersSumAggregateOutputType_db {
+  id: Int
+}
+
+type UsersMinAggregateOutputType_db {
+  id: Int
+  email: String
+  name: String
+  updatedat: DateTime_db
+  lastlogin: DateTime_db
+}
+
+type UsersMaxAggregateOutputType_db {
+  id: Int
+  email: String
+  name: String
+  updatedat: DateTime_db
+  lastlogin: DateTime_db
+}
+
+type AggregateUsers_db {
+  _count: UsersCountAggregateOutputType_db
+  _avg: UsersAvgAggregateOutputType_db
+  _sum: UsersSumAggregateOutputType_db
+  _min: UsersMinAggregateOutputType_db
+  _max: UsersMaxAggregateOutputType_db
+}
+
+input usersCountOrderByAggregateInput_db {
+  id: SortOrder_db
+  email: SortOrder_db
+  name: SortOrder_db
+  updatedat: SortOrder_db
+  lastlogin: SortOrder_db
+}
+
+input usersAvgOrderByAggregateInput_db {
+  id: SortOrder_db
+}
+
+input usersMaxOrderByAggregateInput_db {
+  id: SortOrder_db
+  email: SortOrder_db
+  name: SortOrder_db
+  updatedat: SortOrder_db
+  lastlogin: SortOrder_db
+}
+
+input usersMinOrderByAggregateInput_db {
+  id: SortOrder_db
+  email: SortOrder_db
+  name: SortOrder_db
+  updatedat: SortOrder_db
+  lastlogin: SortOrder_db
+}
+
+input usersSumOrderByAggregateInput_db {
+  id: SortOrder_db
+}
+
+input usersOrderByWithAggregationInput_db {
+  id: SortOrder_db
+  email: SortOrder_db
+  name: SortOrder_db
+  updatedat: SortOrder_db
+  lastlogin: SortOrder_db
+  _count: usersCountOrderByAggregateInput_db
+  _avg: usersAvgOrderByAggregateInput_db
+  _max: usersMaxOrderByAggregateInput_db
+  _min: usersMinOrderByAggregateInput_db
+  _sum: usersSumOrderByAggregateInput_db
+}
+
+input NestedDateTimeWithAggregatesFilter_db {
+  equals: DateTime_db
+  in: [DateTime_db]
+  notIn: [DateTime_db]
+  lt: DateTime_db
+  lte: DateTime_db
+  gt: DateTime_db
+  gte: DateTime_db
+  not: NestedDateTimeWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _min: NestedDateTimeFilter_db
+  _max: NestedDateTimeFilter_db
+}
+
+input DateTimeWithAggregatesFilter_db {
+  equals: DateTime_db
+  in: [DateTime_db]
+  notIn: [DateTime_db]
+  lt: DateTime_db
+  lte: DateTime_db
+  gt: DateTime_db
+  gte: DateTime_db
+  not: NestedDateTimeWithAggregatesFilter_db
+  _count: NestedIntFilter_db
+  _min: NestedDateTimeFilter_db
+  _max: NestedDateTimeFilter_db
+}
+
+input usersScalarWhereWithAggregatesInput_db {
+  AND: usersScalarWhereWithAggregatesInput_db
+  OR: [usersScalarWhereWithAggregatesInput_db]
+  NOT: usersScalarWhereWithAggregatesInput_db
+  id: IntWithAggregatesFilter_db
+  email: StringWithAggregatesFilter_db
+  name: StringWithAggregatesFilter_db
+  updatedat: DateTimeWithAggregatesFilter_db
+  lastlogin: DateTimeWithAggregatesFilter_db
+}
+
+type UsersGroupByOutputType_db {
+  id: Int!
+  email: String!
+  name: String!
+  updatedat: DateTime_db!
+  lastlogin: DateTime_db!
+  _count: UsersCountAggregateOutputType_db
+  _avg: UsersAvgAggregateOutputType_db
+  _sum: UsersSumAggregateOutputType_db
+  _min: UsersMinAggregateOutputType_db
+  _max: UsersMaxAggregateOutputType_db
+}
+
+type Query {
+  db_findFirstmessages(where: messagesWhereInput_db, orderBy: [messagesOrderByWithRelationInput_db], cursor: messagesWhereUniqueInput_db, take: Int, skip: Int, distinct: [MessagesScalarFieldEnum_db]): messages_db
+  db_findManymessages(where: messagesWhereInput_db, orderBy: [messagesOrderByWithRelationInput_db], cursor: messagesWhereUniqueInput_db, take: Int, skip: Int, distinct: [MessagesScalarFieldEnum_db]): [messages_db]!
+  db_aggregatemessages(where: messagesWhereInput_db, orderBy: [messagesOrderByWithRelationInput_db], cursor: messagesWhereUniqueInput_db, take: Int, skip: Int): AggregateMessages_db!
+  db_groupBymessages(where: messagesWhereInput_db, orderBy: [messagesOrderByWithAggregationInput_db], by: [MessagesScalarFieldEnum_db]!, having: messagesScalarWhereWithAggregatesInput_db, take: Int, skip: Int): [MessagesGroupByOutputType_db]!
+  db_findUniquemessages(where: messagesWhereUniqueInput_db!): messages_db
+  db_findFirstusers(where: usersWhereInput_db, orderBy: [usersOrderByWithRelationInput_db], cursor: usersWhereUniqueInput_db, take: Int, skip: Int, distinct: [UsersScalarFieldEnum_db]): users_db
+  db_findManyusers(where: usersWhereInput_db, orderBy: [usersOrderByWithRelationInput_db], cursor: usersWhereUniqueInput_db, take: Int, skip: Int, distinct: [UsersScalarFieldEnum_db]): [users_db]!
+  db_aggregateusers(where: usersWhereInput_db, orderBy: [usersOrderByWithRelationInput_db], cursor: usersWhereUniqueInput_db, take: Int, skip: Int): AggregateUsers_db!
+  db_groupByusers(where: usersWhereInput_db, orderBy: [usersOrderByWithAggregationInput_db], by: [UsersScalarFieldEnum_db]!, having: usersScalarWhereWithAggregatesInput_db, take: Int, skip: Int): [UsersGroupByOutputType_db]!
+  db_findUniqueusers(where: usersWhereUniqueInput_db!): users_db
+}
+
+input usersCreateWithoutMessagesInput_db {
+  email: String!
+  name: String!
+  updatedat: DateTime_db
+  lastlogin: DateTime_db
+}
+
+input usersCreateOrConnectWithoutMessagesInput_db {
+  where: usersWhereUniqueInput_db!
+  create: usersCreateWithoutMessagesInput_db!
+}
+
+input usersCreateNestedOneWithoutMessagesInput_db {
+  create: usersCreateWithoutMessagesInput_db
+  connectOrCreate: usersCreateOrConnectWithoutMessagesInput_db
+  connect: usersWhereUniqueInput_db
+}
+
+input messagesCreateInput_db {
+  message: String!
+  users: usersCreateNestedOneWithoutMessagesInput_db!
+}
+
+input StringFieldUpdateOperationsInput_db {
+  set: String
+}
+
+input DateTimeFieldUpdateOperationsInput_db {
+  set: DateTime_db
+}
+
+input usersUpdateWithoutMessagesInput_db {
+  email: StringFieldUpdateOperationsInput_db
+  name: StringFieldUpdateOperationsInput_db
+  updatedat: DateTimeFieldUpdateOperationsInput_db
+  lastlogin: DateTimeFieldUpdateOperationsInput_db
+}
+
+input usersUpsertWithoutMessagesInput_db {
+  update: usersUpdateWithoutMessagesInput_db!
+  create: usersCreateWithoutMessagesInput_db!
+}
+
+input usersUpdateOneRequiredWithoutMessagesInput_db {
+  create: usersCreateWithoutMessagesInput_db
+  connectOrCreate: usersCreateOrConnectWithoutMessagesInput_db
+  upsert: usersUpsertWithoutMessagesInput_db
+  connect: usersWhereUniqueInput_db
+  update: usersUpdateWithoutMessagesInput_db
+}
+
+input messagesUpdateInput_db {
+  message: StringFieldUpdateOperationsInput_db
+  users: usersUpdateOneRequiredWithoutMessagesInput_db
+}
+
+input messagesCreateManyInput_db {
+  id: Int
+  user_id: Int!
+  message: String!
+}
+
+type AffectedRowsOutput_db {
+  count: Int!
+}
+
+input messagesUpdateManyMutationInput_db {
+  message: StringFieldUpdateOperationsInput_db
+}
+
+input messagesCreateWithoutUsersInput_db {
+  message: String!
+}
+
+input messagesCreateOrConnectWithoutUsersInput_db {
+  where: messagesWhereUniqueInput_db!
+  create: messagesCreateWithoutUsersInput_db!
+}
+
+input messagesCreateManyUsersInput_db {
+  id: Int
+  message: String!
+}
+
+input messagesCreateManyUsersInputEnvelope_db {
+  data: [messagesCreateManyUsersInput_db]!
+  skipDuplicates: Boolean
+}
+
+input messagesCreateNestedManyWithoutUsersInput_db {
+  create: messagesCreateWithoutUsersInput_db
+  connectOrCreate: messagesCreateOrConnectWithoutUsersInput_db
+  createMany: messagesCreateManyUsersInputEnvelope_db
+  connect: messagesWhereUniqueInput_db
+}
+
+input usersCreateInput_db {
+  email: String!
+  name: String!
+  updatedat: DateTime_db
+  lastlogin: DateTime_db
+  messages: messagesCreateNestedManyWithoutUsersInput_db
+}
+
+input messagesUpdateWithoutUsersInput_db {
+  message: StringFieldUpdateOperationsInput_db
+}
+
+input messagesUpsertWithWhereUniqueWithoutUsersInput_db {
+  where: messagesWhereUniqueInput_db!
+  update: messagesUpdateWithoutUsersInput_db!
+  create: messagesCreateWithoutUsersInput_db!
+}
+
+input messagesUpdateWithWhereUniqueWithoutUsersInput_db {
+  where: messagesWhereUniqueInput_db!
+  data: messagesUpdateWithoutUsersInput_db!
+}
+
+input messagesScalarWhereInput_db {
+  AND: messagesScalarWhereInput_db
+  OR: [messagesScalarWhereInput_db]
+  NOT: messagesScalarWhereInput_db
+  id: IntFilter_db
+  user_id: IntFilter_db
+  message: StringFilter_db
+}
+
+input messagesUpdateManyWithWhereWithoutUsersInput_db {
+  where: messagesScalarWhereInput_db!
+  data: messagesUpdateManyMutationInput_db!
+}
+
+input messagesUpdateManyWithoutUsersInput_db {
+  create: messagesCreateWithoutUsersInput_db
+  connectOrCreate: messagesCreateOrConnectWithoutUsersInput_db
+  upsert: messagesUpsertWithWhereUniqueWithoutUsersInput_db
+  createMany: messagesCreateManyUsersInputEnvelope_db
+  connect: messagesWhereUniqueInput_db
+  set: messagesWhereUniqueInput_db
+  disconnect: messagesWhereUniqueInput_db
+  delete: messagesWhereUniqueInput_db
+  update: messagesUpdateWithWhereUniqueWithoutUsersInput_db
+  updateMany: messagesUpdateManyWithWhereWithoutUsersInput_db
+  deleteMany: messagesScalarWhereInput_db
+}
+
+input usersUpdateInput_db {
+  email: StringFieldUpdateOperationsInput_db
+  name: StringFieldUpdateOperationsInput_db
+  updatedat: DateTimeFieldUpdateOperationsInput_db
+  lastlogin: DateTimeFieldUpdateOperationsInput_db
+  messages: messagesUpdateManyWithoutUsersInput_db
+}
+
+input usersCreateManyInput_db {
+  id: Int
+  email: String!
+  name: String!
+  updatedat: DateTime_db
+  lastlogin: DateTime_db
+}
+
+input usersUpdateManyMutationInput_db {
+  email: StringFieldUpdateOperationsInput_db
+  name: StringFieldUpdateOperationsInput_db
+  updatedat: DateTimeFieldUpdateOperationsInput_db
+  lastlogin: DateTimeFieldUpdateOperationsInput_db
+}
+
+type Mutation {
+  db_createOnemessages(data: messagesCreateInput_db!): messages_db
+  db_upsertOnemessages(where: messagesWhereUniqueInput_db!, create: messagesCreateInput_db!, update: messagesUpdateInput_db!): messages_db
+  db_createManymessages(data: [messagesCreateManyInput_db]!, skipDuplicates: Boolean): AffectedRowsOutput_db
+  db_deleteOnemessages(where: messagesWhereUniqueInput_db!): messages_db
+  db_updateOnemessages(data: messagesUpdateInput_db!, where: messagesWhereUniqueInput_db!): messages_db
+  db_updateManymessages(data: messagesUpdateManyMutationInput_db!, where: messagesWhereInput_db): AffectedRowsOutput_db
+  db_deleteManymessages(where: messagesWhereInput_db): AffectedRowsOutput_db
+  db_createOneusers(data: usersCreateInput_db!): users_db
+  db_upsertOneusers(where: usersWhereUniqueInput_db!, create: usersCreateInput_db!, update: usersUpdateInput_db!): users_db
+  db_createManyusers(data: [usersCreateManyInput_db]!, skipDuplicates: Boolean): AffectedRowsOutput_db
+  db_deleteOneusers(where: usersWhereUniqueInput_db!): users_db
+  db_updateOneusers(data: usersUpdateInput_db!, where: usersWhereUniqueInput_db!): users_db
+  db_updateManyusers(data: usersUpdateManyMutationInput_db!, where: usersWhereInput_db): AffectedRowsOutput_db
+  db_deleteManyusers(where: usersWhereInput_db): AffectedRowsOutput_db
+}
+
+scalar DateTime_db
+
+scalar Json_db
+
+scalar UUID_db
+
+scalar BigInt_db
+
+enum Claim {
+  EMAIL
+  EMAIL_VERIFIED
+  NAME
+  NICKNAME
+  LOCATION
+  PROVIDER
+}
+
+enum COMMON_REGEX_PATTERN {
+  EMAIL
+  DOMAIN
+}
+
+enum WG_ROLE {
+  admin
+  user
+}
+
+enum WunderGraphDateTimeFormat {
+  """2006-01-02T15:04:05-0700"""
+  ISO8601
+  """Mon Jan _2 15:04:05 2006"""
+  ANSIC
+  """Mon Jan _2 15:04:05 MST 2006"""
+  UnixDate
+  """Mon Jan 02 15:04:05 -0700 2006"""
+  RubyDate
+  """02 Jan 06 15:04 MST"""
+  RFC822
+  """02 Jan 06 15:04 -0700"""
+  RFC822Z
+  """Monday, 02-Jan-06 15:04:05 MST"""
+  RFC850
+  """Mon, 02 Jan 2006 15:04:05 MST"""
+  RFC1123
+  """Mon, 02 Jan 2006 15:04:05 -0700"""
+  RFC1123Z
+  """2006-01-02T15:04:05Z07:00"""
+  RFC3339
+  """2006-01-02T15:04:05.999999999Z07:00"""
+  RFC3339Nano
+  """3:04PM"""
+  Kitchen
+  """Jan _2 15:04:05"""
+  Stamp
+  """Jan _2 15:04:05.000"""
+  StampMilli
+  """Jan _2 15:04:05.000000"""
+  StampMicro
+  """Jan _2 15:04:05.000000000"""
+  StampNano
+}
